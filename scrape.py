@@ -1,7 +1,9 @@
 # Read-only instance
 import praw as praw
+import re
 
 import pandas as pd
+import time
 
 
 reddit_read_only = praw.Reddit(client_id="SvCJdstpGCed5uhK7XJyIw",  # your client id
@@ -15,55 +17,27 @@ reddit_authorized = praw.Reddit(client_id="SvCJdstpGCed5uhK7XJyIw",  # your clie
                                 username="AnyAcanthocephala173",  # your reddit username
                                 password="Beyblade123@")
 
-# subreddit = reddit_read_only.subreddit("redditdev")
-#
-# # Display the name of the Subreddit
-# print("Display Name:", subreddit.display_name)
-#
-# # Display the title of the Subreddit
-# print("Title:", subreddit.title)
-#
-# # Display the description of the Subreddit
-# print("Description:", subreddit.description)
 
-subreddit = reddit_read_only.subreddit("movies")
+subreddit = reddit_read_only.subreddit("netflix")
+timestart=time.time()
 
 
+posts = subreddit.hot(limit=100)
 
-posts = subreddit.hot(limit=5)
-# Scraping the top posts of the current month
-
-posts_dict = {"Title": [], "Post Text": [],
-              "ID": [], "Score": [],
-              "Comments": [], "Post URL": []
-              }
+posts_dict = {"Post Text":[],"Comments": [] }
 
 for post in posts:
-    # Title of each post
-    posts_dict["Title"].append(post.title)
+    post.comments.replace_more(limit=0)
 
-    # Text inside a post
-    posts_dict["Post Text"].append(post.selftext)
-
-    # Unique ID of each post
-    posts_dict["ID"].append(post.id)
-
-    # The score of a post
-    posts_dict["Score"].append(post.score)
-
-    # Total number of comments inside the post
-    comments=""
     for commentid,comment in enumerate(post.comments):
-        comments+=str(commentid)+". "+str(comment.body)+"\n"
-        if commentid==5:
+        posts_dict["Post Text"].append(re.sub("&.*"," ",post.selftext))
+        posts_dict["Comments"].append(re.sub("&.*"," ",comment.body))
+        if commentid==1000:
             break
-    posts_dict["Comments"].append(comments)
-
-    # URL of each post
-    posts_dict["Post URL"].append(post.url)
-
-# Saving the data in a pandas dataframe
-top_posts = pd.DataFrame(posts_dict)
-top_posts.to_csv("Top Posts.csv", index=True)
-
-print(top_posts)
+    top_posts = pd.DataFrame(posts_dict)
+    title=post.title.replace("/"," ")
+    top_posts.to_csv(title+".csv", index=True)
+    posts_dict["Post Text"]=[]
+    posts_dict["Comments"]=[]
+timednd=time.time()
+print(timednd-timestart)
