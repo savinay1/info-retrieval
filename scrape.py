@@ -20,24 +20,26 @@ reddit_authorized = praw.Reddit(client_id="SvCJdstpGCed5uhK7XJyIw",  # your clie
 
 subreddit = reddit_read_only.subreddit("netflix")
 timestart=time.time()
-
-
-posts = subreddit.hot(limit=100)
+#
+posts = subreddit.top(limit=50000)
 
 posts_dict = {"Post Text":[],"Comments": [] }
 
 for post in posts:
+    post=reddit_read_only.submission(id=post.id)
     post.comments.replace_more(limit=0)
-
+    if len(post.comments) < 100:
+        continue
     for commentid,comment in enumerate(post.comments):
         posts_dict["Post Text"].append(re.sub("&.*"," ",post.selftext))
         posts_dict["Comments"].append(re.sub("&.*"," ",comment.body))
-        if commentid==1000:
-            break
-    top_posts = pd.DataFrame(posts_dict)
-    title=post.title.replace("/"," ")
-    top_posts.to_csv(title+".csv", index=True)
-    posts_dict["Post Text"]=[]
-    posts_dict["Comments"]=[]
+        title = post.title.replace("/", " ")
+        if (commentid+1)%10==0:
+            top_posts = pd.DataFrame(posts_dict)
+            top_posts.to_csv("csv/" + title[0:min(len(title), 50)] + str(commentid+1) + ".csv", index=True)
+            posts_dict["Post Text"] = []
+            posts_dict["Comments"] = []
+
+
 timednd=time.time()
 print(timednd-timestart)
