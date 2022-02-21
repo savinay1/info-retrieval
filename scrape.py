@@ -9,12 +9,6 @@ reddit_read_only = praw.Reddit(client_id="SvCJdstpGCed5uhK7XJyIw",  # your clien
                                client_secret="avt5nZXQqLbwyUvyWns6L90I_8M-EQ",  # your client secret
                                user_agent="inforetrieval")  # your user agent
 
-# Authorized instance
-reddit_authorized = praw.Reddit(client_id="SvCJdstpGCed5uhK7XJyIw",  # your client id
-                                client_secret="avt5nZXQqLbwyUvyWns6L90I_8M-EQ",  # your client secret
-                                user_agent="inforetrieval",  # your user agent
-                                username="AnyAcanthocephala173",  # your reddit username
-                                password="Beyblade123@")
 
 #
 # posted_after = int(datetime.datetime(2009, 1, 1).timestamp())
