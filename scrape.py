@@ -2,7 +2,7 @@
 import praw as praw
 import re
 import pandas as pd
-import time
+
 
 
 reddit_read_only = praw.Reddit(client_id="SvCJdstpGCed5uhK7XJyIw",  # your client id
@@ -10,11 +10,6 @@ reddit_read_only = praw.Reddit(client_id="SvCJdstpGCed5uhK7XJyIw",  # your clien
                                user_agent="inforetrieval")  # your user agent
 
 
-#
-# posted_after = int(datetime.datetime(2009, 1, 1).timestamp())
-# posted_before = int(datetime.datetime(2021, 12,30 ).timestamp())
-
-#posts = psraw.submission_search(reddit_authorized,subreddit="TrueFilm",limit=None)
 subreddit = reddit_read_only.subreddit("TrueFilm")
 subreddit2 = reddit_read_only.subreddit("MovieSuggestions")
 subreddit3= reddit_read_only.subreddit("movies")
@@ -60,4 +55,3 @@ for posts in postsl:
         posts_dict["Post Text"] = []
         posts_dict["Comments"] = []
 
-timednd=time.time()
